@@ -4,12 +4,11 @@ import html
 import json
 import sqlite3
 import time
-from dataclasses import asdict
 from pathlib import Path
 from typing import Iterable
 
 from .core import TraceEvent, Trajectory, diff_trajectories
-from .replay import trajectory_from_replay, trajectory_to_replay
+from .replay import FORMAT, trajectory_from_replay, trajectory_to_replay
 
 
 class TrajectoryStore:
@@ -118,7 +117,7 @@ class TrajectoryStore:
 
 
 def trajectory_from_payload(payload: dict) -> Trajectory:
-    if payload.get("schema") == "agenttrace-trajectory/v1":
+    if payload.get("format") == FORMAT:
         return trajectory_from_replay(payload)
     run_id = str(payload.get("run_id", "")).strip()
     if not run_id:
@@ -154,7 +153,7 @@ def render_timeline(trajectory: Trajectory) -> str:
         )
     return f"""<!doctype html>
 <html><head><meta charset='utf-8'><title>AgentTrace {html.escape(trajectory.run_id)}</title>
-<style>body{{font-family:system-ui;margin:2rem;background:#0b1020;color:#e7edf7}}a{{color:#7dd3fc}}table{{width:100%;border-collapse:collapse}}td,th{{padding:.65rem;border-bottom:1px solid #27324a;text-align:left}}code{{white-space:pre-wrap;color:#c4b5fd}}.ok{{color:#86efac}}</style></head>
+<style>body{{font-family:system-ui;margin:2rem;background:#0b1020;color:#e7edf7}}a{{color:#7dd3fc}}table{{width:100%;border-collapse:collapse}}td,th{{padding:.65rem;border-bottom:1px solid #27324a;text-align:left}}code{{white-space:pre-wrap;color:#c4b5fd}}</style></head>
 <body><p><a href='/'>← runs</a></p><h1>{html.escape(trajectory.run_id)}</h1>
 <p>{html.escape(json.dumps(trajectory.attributes, ensure_ascii=False, sort_keys=True))}</p>
 <table><thead><tr><th>#</th><th>Kind</th><th>Step</th><th>Status</th><th>Duration</th><th>Attributes</th></tr></thead><tbody>{''.join(rows)}</tbody></table></body></html>"""
@@ -172,7 +171,7 @@ def render_index(trajectories: Iterable[Trajectory]) -> str:
         )
     return f"""<!doctype html><html><head><meta charset='utf-8'><title>AgentTrace Collector</title>
 <style>body{{font-family:system-ui;margin:2rem;background:#0b1020;color:#e7edf7;max-width:1100px}}a{{color:#7dd3fc}}article{{padding:1rem;margin:.8rem 0;border:1px solid #27324a;border-radius:12px;background:#11182b}}code{{color:#c4b5fd}}</style></head>
-<body><h1>AgentTrace Collector</h1><p>Local trajectory timeline, query and diff store.</p>{''.join(cards) or '<p>No runs yet.</p>'}</body></html>"""
+<body><h1>AgentTrace Collector</h1><p>Local trajectory timeline, query and diff store. Filters: <code>?tool=...</code>, <code>?model=...</code>, <code>?error=true</code>.</p>{''.join(cards) or '<p>No runs yet.</p>'}</body></html>"""
 
 
 def render_diff(left: Trajectory, right: Trajectory) -> str:
@@ -180,6 +179,6 @@ def render_diff(left: Trajectory, right: Trajectory) -> str:
     left_path = "<br>".join(html.escape(item) for item in diff.left_path)
     right_path = "<br>".join(html.escape(item) for item in diff.right_path)
     return f"""<!doctype html><html><head><meta charset='utf-8'><title>AgentTrace Diff</title>
-<style>body{{font-family:system-ui;margin:2rem;background:#0b1020;color:#e7edf7}}.grid{{display:grid;grid-template-columns:1fr 1fr;gap:1rem}}section{{border:1px solid #27324a;border-radius:12px;padding:1rem}}code{{color:#c4b5fd}}</style></head>
+<style>body{{font-family:system-ui;margin:2rem;background:#0b1020;color:#e7edf7}}a{{color:#7dd3fc}}.grid{{display:grid;grid-template-columns:1fr 1fr;gap:1rem}}section{{border:1px solid #27324a;border-radius:12px;padding:1rem}}code{{color:#c4b5fd}}</style></head>
 <body><p><a href='/'>← runs</a></p><h1>Trajectory Diff</h1><p>same path: <strong>{str(diff.same_path).lower()}</strong> · first divergence: {diff.first_divergence}</p>
 <div class='grid'><section><h2>{html.escape(left.run_id)}</h2><code>{left_path}</code></section><section><h2>{html.escape(right.run_id)}</h2><code>{right_path}</code></section></div></body></html>"""
