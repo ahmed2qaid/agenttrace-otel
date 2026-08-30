@@ -4,11 +4,16 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "agenttrace-otel"
-version = "0.1.0"
-description = "OpenTelemetry-native trajectory tracing and diffing for AI agents"
+version = "0.2.0"
+description = "OpenTelemetry-native trajectory tracing, framework adapters, and diffing for AI agents"
 requires-python = ">=3.11"
 dependencies = ["opentelemetry-api>=1.27.0"]
 license = {text = "MIT"}
+
+[project.optional-dependencies]
+openai = ["openai-agents>=0.22,<1"]
+mcp = ["mcp>=2.1,<3"]
+all = ["openai-agents>=0.22,<1", "mcp>=2.1,<3"]
 
 [tool.setuptools.packages.find]
 where = ["src"]

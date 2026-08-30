@@ -9,16 +9,19 @@
 - [x] JSON export
 - [x] tests and CI
 
-Exit criteria: developers can instrument an agent run and compare two trajectories without adopting a full observability backend.
-
 ## v0.2 — Framework instrumentation
 
-- OpenAI Agents SDK hooks
-- LangGraph callbacks
-- n8n execution importer
-- MCP tool-call instrumentation
-- token/cost attributes
-- error/retry annotations
+- [x] OpenAI Agents SDK RunHooks adapter
+- [x] LangGraph v3 event-stream adapter
+- [x] n8n execution importer
+- [x] MCP tool-call wrapper
+- [x] token/request usage attributes
+- [x] optional model cost calculation
+- [x] error annotations
+- [x] retry annotations for imported n8n attempts
+- [x] integration tests
+
+Exit criteria: one AgentTrace trajectory can be populated from live framework lifecycle events or imported automation execution data without adopting a proprietary observability backend.
 
 ## v0.3 — Replay and analysis
 
@@ -27,6 +30,7 @@ Exit criteria: developers can instrument an agent run and compare two trajectori
 - trajectory assertions
 - forbidden/required tool paths
 - latency and cost regression thresholds
+- retry-rate regression thresholds
 
 ## v0.4 — Collector and UI
 
