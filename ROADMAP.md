@@ -17,20 +17,23 @@
 - [x] MCP tool-call wrapper
 - [x] token/request usage attributes
 - [x] optional model cost calculation
-- [x] error annotations
-- [x] retry annotations for imported n8n attempts
+- [x] error/retry annotations
 - [x] integration tests
 
-Exit criteria: one AgentTrace trajectory can be populated from live framework lifecycle events or imported automation execution data without adopting a proprietary observability backend.
+## v0.3 — Replay and regression gates
 
-## v0.3 — Replay and analysis
+- [x] portable `agenttrace-trajectory/v1` replay format
+- [x] save/load replay helpers
+- [x] run comparison CLI (`agenttrace-gate`)
+- [x] required and forbidden tool assertions
+- [x] ordered required tool-path assertions
+- [x] optional exact trajectory regression gate
+- [x] absolute latency and cost limits
+- [x] latency and cost regression thresholds against a baseline
+- [x] retry-rate regression threshold
+- [x] JSON output suitable for CI
 
-- trace replay format
-- run comparison CLI
-- trajectory assertions
-- forbidden/required tool paths
-- latency and cost regression thresholds
-- retry-rate regression thresholds
+Exit criteria: a committed baseline trace can block a PR or release when an agent takes a forbidden path or regresses beyond configured latency, cost, retry, or trajectory limits.
 
 ## v0.4 — Collector and UI
 
