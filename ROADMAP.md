@@ -37,11 +37,16 @@ Exit criteria: a committed baseline trace can block a PR or release when an agen
 
 ## v0.4 — Collector and UI
 
-- OTLP receiver example
-- lightweight local collector
-- run timeline UI
-- visual trajectory diff
-- query by tool/model/error
+- [x] OpenTelemetry Collector OTLP receiver example
+- [x] lightweight local HTTP collector command
+- [x] SQLite-backed trajectory store
+- [x] run timeline UI
+- [x] visual trajectory diff view
+- [x] query/filter by tool, model, and error state
+- [x] JSON ingestion and query API for replay artifacts
+- [x] tests for persistence, filtering, replay ingestion, and UI rendering
+
+Exit criteria: developers can send portable AgentTrace trajectories to a local collector, inspect timelines and diffs in a browser, and query regressions without deploying a full observability platform.
 
 ## v1.0
 
